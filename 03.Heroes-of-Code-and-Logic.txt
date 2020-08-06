@@ -1,0 +1,102 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+					
+public class Program
+{
+	public static void Main()
+	{
+		int n = int.Parse(Console.ReadLine());
+		
+		int hpMax = 100;
+		int mpMax = 200;
+		
+		Dictionary<string, int[]> heros = new Dictionary<string, int[]>();
+		
+		for(int i = 0; i < n; i++)
+		{
+			string[] hero = Console.ReadLine().Split();
+			
+			heros.Add(hero[0], new int[2] { int.Parse(hero[1]), int.Parse(hero[2]) });
+		}
+		
+		while(true)
+		{
+			string input = Console.ReadLine();
+			
+			if(input == "End")
+			{
+				break;
+			}
+			
+			string[] command = input.Split(new string[] { " - " }, StringSplitOptions.None);
+			
+			switch(command[0]) 
+			{
+					// Heal – {hero name} – {amount}
+				case "Heal": 
+					if(heros[command[1]][0] + int.Parse(command[2]) > hpMax)
+					{
+						Console.WriteLine("{0} healed for {1} HP!", command[1], (hpMax - heros[command[1]][0]));
+						heros[command[1]][0] = hpMax;
+					} else 
+					{
+						Console.WriteLine("{0} healed for {1} HP!", command[1], command[2]);
+						heros[command[1]][0] += int.Parse(command[2]);
+					}
+					break;
+					
+					// Recharge – {hero name} – {amount}
+				case "Recharge": 
+					if(heros[command[1]][1] + int.Parse(command[2]) > mpMax)
+					{
+						Console.WriteLine("{0} recharged for {1} MP!", command[1], (mpMax - heros[command[1]][1]));
+						heros[command[1]][1] = mpMax;
+					} else 
+					{
+						Console.WriteLine("{0} recharged for {1} MP!", command[1], command[2]);
+						heros[command[1]][1] += int.Parse(command[2]);
+					}
+					break;
+					
+					// TakeDamage – {hero name} – {damage} – {attacker}
+				case "TakeDamage":
+					heros[command[1]][0] -= int.Parse(command[2]);
+					
+					if(heros[command[1]][0] > 0)
+					{
+						Console.WriteLine("{0} was hit for {1} HP by {2} and now has {3} HP left!", command[1], command[2], command[3], heros[command[1]][0]);
+					} else
+					{
+						Console.WriteLine("{0} has been killed by {1}!", command[1], command[3]);
+					}
+					break;
+					
+					// CastSpell – {hero name} – {MP needed} – {spell name}
+				case "CastSpell":
+					heros[command[1]][1] -= int.Parse(command[2]);
+					
+					if(heros[command[1]][1] >= 0)
+					{
+						Console.WriteLine("{0} has successfully cast {1} and now has {2} MP!", command[1], command[3], heros[command[1]][1]);
+					} else
+					{
+						Console.WriteLine("{0} does not have enough MP to cast {1}!", command[1], command[3]);
+					}
+					break;
+			}
+		}
+		
+		var sortedHeros = heros.OrderByDescending(np => np.Value[0]).ThenBy(name => name.Key);
+		
+		foreach(var hero in sortedHeros)
+		{
+			if(hero.Value[0] > 0 && hero.Value[1] >= 0)
+			{
+				Console.WriteLine(hero.Key);
+				Console.WriteLine("  HP: {0}", hero.Value[0]);
+				Console.WriteLine("  MP: {0}", hero.Value[1]);
+			}
+		}
+	}
+}

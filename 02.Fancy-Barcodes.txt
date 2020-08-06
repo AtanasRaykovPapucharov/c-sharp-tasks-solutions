@@ -1,0 +1,44 @@
+using System;
+using System.Text.RegularExpressions;
+					
+public class Program
+{
+	public static void Main()
+	{
+		string OUTPUT_INVALID = "Invalid barcode";
+		string OUTPUT_VALID = "Product group: ";
+		string pattern = @"^@#+([A-Z][A-Za-z0-9]{4,}[A-Z])@#+$";  
+		string digits = String.Empty;
+		
+		int linesNumber = int.Parse(Console.ReadLine());
+		
+		Regex rg = new Regex(pattern);
+		
+		for(int line = 0; line < linesNumber; line++) 
+		{
+			string barcode = Console.ReadLine();
+			
+			if(!rg.IsMatch(barcode)) 
+			{
+				Console.WriteLine(OUTPUT_INVALID);
+			} else 
+			{
+				for(int i = 0; i < barcode.Length; i++) 
+				{
+					if(Char.IsDigit(barcode[i])) 
+					{
+						digits += barcode[i];
+					}
+				} 
+				
+				if(digits == String.Empty)
+				{
+					digits = "00";
+				}
+				
+				Console.WriteLine(OUTPUT_VALID + digits);
+				digits = String.Empty;
+			}
+		}
+	}
+}

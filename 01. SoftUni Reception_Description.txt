@@ -1,0 +1,32 @@
+using System;
+					
+public class Program
+{
+	public static void Main()
+	{
+		int studentsPerHour = 0;
+		
+		for(int i = 0; i < 3; i++)
+		{
+			studentsPerHour += int.Parse(Console.ReadLine());
+		}
+		
+		int students = int.Parse(Console.ReadLine());
+		int time = students / studentsPerHour;
+		
+		if(students % studentsPerHour > 0)
+		{
+			time++;
+		} 
+		
+		if(time % 3 > 0)
+		{
+			time += time / 3;
+		} else 
+		{
+			time += time / 3 - 1;
+		}
+		
+		Console.WriteLine("Time needed: {0}h.", time);
+	}
+}
