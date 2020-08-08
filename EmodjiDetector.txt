@@ -1,0 +1,57 @@
+using System;
+using System.Text.RegularExpressions;
+using System.Numerics;
+
+namespace _02_EmodjiDetector
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            string input = Console.ReadLine();
+
+            BigInteger tresh = 1;
+            BigInteger coolness = 0;
+
+            for (int i = 0; i < input.Length - 1; i++ )
+            {
+                if (Char.IsDigit(input[i]))
+                {
+                    tresh *= int.Parse(input[i].ToString());
+                }
+            }
+
+            Console.WriteLine("Cool threshold: {0}", tresh);
+
+            Regex pattern = new Regex(@"(\:\:|\*\*)([A-Z][a-z]{2,})\1");
+
+            MatchCollection matches = pattern.Matches(input);
+
+            if (matches.Count > 0)
+            {
+                Console.WriteLine("{0} emojis found in the text. The cool ones are:", matches.Count);
+
+                foreach (Match match in matches)
+                {
+                    if (match.Success)
+                    {
+                        string val = match.Value; // **Tigers**
+
+                        //  **Tigers** == [*(0), *(1), T(2), i, g, e, r, s(Lenth - 3), *(Lenth - 2), *(Lenth - 1)]
+                        for (int j = 2; j < val.Length - 2; j++)  
+                        {
+                            coolness += (int)val[j];
+                        }
+
+                        if(coolness > tresh)
+                        {
+                            Console.WriteLine(val);
+                        }
+						
+						coolness = 0;
+                    }
+                }
+            }
+        }
+    }
+}
